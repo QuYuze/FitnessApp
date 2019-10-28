@@ -5,5 +5,11 @@
     <string name="Signup">Sign up</string>
     <string name="forget">Forgot Password ?</string>
     <string name="do_not_have_account">Do not have an account ?</string>
-
+    <string name="name">Username:</string>
+    <string name="pass">Password:</string>
+    <string name="repet">Repeat your password:</string>
+    <string name="email">Email:</string>
+    <string name="dateOfBirth">Date of birth:</string>
+    <string name="checkbox_TEXT">I have read and aggree to </string>
+    <string name="checkbox_link">Terms and Conditions</string>
 </resources>
