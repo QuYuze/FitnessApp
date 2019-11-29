@@ -2,7 +2,6 @@ package com.example.a4176_project.ui.home
 
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -14,16 +13,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
-import com.example.a4176_project.MainActivity
 import com.example.a4176_project.MapAPIResponse
 import com.example.a4176_project.R
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -31,18 +27,14 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.fragment_home.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
-
-import java.lang.Exception
-import com.google.android.gms.maps.SupportMapFragment
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mContext: Context
@@ -53,9 +45,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
     private var distance: Double = 500.toDouble()
-
-    private lateinit var mMapView: MapView
-    private lateinit var mView: View
+    private var return_origin:Boolean = false
+    private lateinit var currLoc:LatLng
 
     //https://stackoverflow.com/questions/8215308/using-context-in-a-fragment referenced to get context
     override fun onAttach(context: Context) {
@@ -73,21 +64,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(OnMapReadyCallback {
             mMap = it
-            val location1 = LatLng(13.0356745, 77.5933021)
-            val location2 = LatLng(13.029727, 77.5933021)
+            mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isMyLocationButtonEnabled= false
 
-            mMap.addMarker(MarkerOptions().position(location1).title("location1"))
-            mMap.addMarker(MarkerOptions().position(location2).title("location2"))
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, 15f))
-
-            val URL = getDirectionURL(location1, location2)
-            GetDirection(URL, distance).execute()
+            locate()//focus on the user current location by default
         })
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(root.context)
+
         val button = root.findViewById<FloatingActionButton>(R.id.button)
         button.setOnClickListener {
-         locate()
+            locate()
+        }
+        val runButton = root.findViewById<FloatingActionButton>(R.id.button_run)
+        runButton.setOnClickListener {
+            showDialog()
         }
         return root
     }
@@ -99,15 +90,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         MapsInitializer.initialize(context)
         mMap = googleMap
-        val location1 = LatLng(13.0356745, 77.5933021)
-        val location2 = LatLng(13.029727, 77.5933021)
-
-        mMap.addMarker(MarkerOptions().position(location1).title("location1"))
-        mMap.addMarker(MarkerOptions().position(location2).title("location2"))
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, 15f))
-
-        val URL = getDirectionURL(location1, location2)
-        GetDirection(URL, distance).execute()
     }
 
     inner class GetDirection(val URL: String, DIS: Double) :
@@ -167,9 +149,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 lineoption.geodesic(true)
             }
             mMap.addPolyline(lineoption)
-            mMap.addMarker(MarkerOptions().position(Destination))
+            mMap.addMarker(MarkerOptions().position(Destination).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dest)))
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Destination, 15f))
         }
-
     }
 
     private fun decodePoly(encoded: String): List<LatLng> {
@@ -204,7 +186,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val p = LatLng(lat.toDouble() / 1E5, lng.toDouble() / 1E5)
             poly.add(p)
         }
-
         return poly
     }
 
@@ -219,14 +200,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 ), 35
             )
         } else {
-            //createLocationRequest()
+            createLocationRequest()
         }
     }
 
-    fun hasLocationPermissions() = checkSelfPermission(
+    private fun hasLocationPermissions() = checkSelfPermission(
         mContext, Manifest.permission.ACCESS_FINE_LOCATION
     ) == PackageManager.PERMISSION_GRANTED
 
+    //request user permission
     private fun createLocationRequest() {
         locationRequest = LocationRequest.create().apply {
             interval = 10000
@@ -265,18 +247,88 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 if (location != null) {
                     Log.d("CORD", location.latitude.toString() + "," + location.longitude)
                     val loc = LatLng(location.latitude, location.longitude)
+                    currLoc = loc
                     //mMap.addMarker(MarkerOptions().position(loc).title("My Location"))
                     //Does not need to show the marker since the button does is to center the map to the current location
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f))
                 } else
                     Toast.makeText(
                         this.context,
-                        "Failed to get location",
+                        "Failed to get location.Please check if GPS is enabled",
                         Toast.LENGTH_SHORT
                     ).show()
             }.addOnFailureListener {
-                Toast.makeText(this.context, "Failed to get location", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this.context, "Failed to get last known location", Toast.LENGTH_SHORT).show()
             }
     }
+    fun randomGeo(center:LatLng, radius:Double) : LatLng{
+        var y0 = center.latitude
+        var x0 = center.longitude
+        var rd = radius / 111300; //about 111300 meters in one degree
 
+        var u = Math.random();
+        var v = Math.random();
+
+        var w = rd * Math.sqrt(u);
+        var t = 2 * Math.PI * v;
+        var x = w * Math.cos(t);
+        var y = w * Math.sin(t);
+
+        //Adjust the x-coordinate for the shrinking of the east-west distances
+        var xp = x / Math.cos(y0);
+
+        var newlat = y + y0;
+        var newlon = x + x0;
+
+        return LatLng(newlat,newlon)
+
+        //References
+        //https://www.youtube.com/watch?v=eiexkzCI8m8
+        //https://www.youtube.com/watch?v=urLA8z6-l3k
+    }
+    fun showDialog() {
+        val builder = AlertDialog.Builder(mContext)
+        builder.setTitle("Set Distance")
+
+        // https://stackoverflow.com/questions/10695103/creating-custom-alertdialog-what-is-the-root-view
+        // Seems ok to inflate view with null rootView
+        val view = layoutInflater.inflate(R.layout.run_dialog, null)
+        val returnToOrigin = view.findViewById(R.id.checkBox2) as CheckBox
+        //val spinner = view.findViewById(R.id.spinner2) as Spinner
+        val runDistance = view.findViewById(R.id.runDistance) as EditText
+
+        builder.setView(view);
+
+        // set up the ok button
+        builder.setPositiveButton(android.R.string.ok) { dialog, p1 ->
+            val d = runDistance.text
+            if(d.isNotEmpty()) {
+                distance = runDistance.text.toString().toDouble()
+                return_origin = returnToOrigin.isChecked
+                locate()
+                if(return_origin)
+                {
+                    distance/=2
+                    val point1 = currLoc
+                    val point2 = randomGeo(point1,distance)
+                    var URL = getDirectionURL(point1, point2)
+                    GetDirection(URL, distance).execute()
+                    URL = getDirectionURL(point2, point1)
+                    GetDirection(URL, distance).execute()
+                }
+                else
+                {
+                    val point1 = currLoc
+                    val point2 = randomGeo(point1,distance)
+                    val URL = getDirectionURL(point1, point2)
+                    GetDirection(URL, distance).execute()
+                }
+            }
+        }
+
+        builder.setNegativeButton(android.R.string.cancel) { dialog, p1 ->
+            dialog.cancel()
+        }
+        builder.show();
+    }
 }
