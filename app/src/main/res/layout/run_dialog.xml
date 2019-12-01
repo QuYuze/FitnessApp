@@ -16,7 +16,7 @@
         android:background="@drawable/text_field"
         android:ems="20"
         android:hint="Enter distance in meters"
-        android:inputType="textPersonName"
+        android:inputType="none|number"
         android:paddingStart="20dp"
         android:paddingEnd="10dp"
         android:textSize="20sp" />

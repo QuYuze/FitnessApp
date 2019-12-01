@@ -72,12 +72,23 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+
+        //sharedPreferences = context!!.getSharedPreferences("home", Context.MODE_PRIVATE)
         mapFragment.getMapAsync(OnMapReadyCallback {
             mMap = it
             mMap.isMyLocationEnabled = true
             mMap.uiSettings.isMyLocationButtonEnabled= false
+            /*
+            //load the saved map
+            val lat = sharedPreferences.getFloat("LAT",0f)
+            val lon = sharedPreferences.getFloat("LON",-63.5863118f)
+            val zoom = sharedPreferences.getFloat("ZOOM",14.0f)
+            if(lat!=0f)
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat.toDouble(),lon.toDouble()), zoom))
+            else
 
-            locate()//focus on the user current location by default
+             */
+                locate()//focus on the user current location by default
         })
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(root.context)
@@ -102,7 +113,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
             //test if user reach the check point
             var arrive = Arrive(currLoc, StepList[ListIndex])
-            if (arrive == true) {
+            if (arrive <=30) {
                 ListIndex++
                 var marker = MarkerList.get(ListIndex)!!
                 marker.remove()
@@ -121,6 +132,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
+        /*
+        val lat = sharedPreferences.getFloat("LAT",0f)
+        val lon = sharedPreferences.getFloat("LON",-63.5863118f)
+        val zoom = sharedPreferences.getFloat("ZOOM",14.0f)
+        if(lat!=0f)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat.toDouble(),lon.toDouble()), zoom))
+        else
+            locate()
+
+         */
         val timerTask = object: TimerTask(){
             override fun run() {
                 if(Flag==true && ListIndex<StepList.size) {
@@ -134,6 +155,25 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     fun getDirectionURL(origin: LatLng, dest: LatLng): String {
         return "https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${dest.latitude},${dest.longitude}&key=AIzaSyDU-IenVPIoA8bxKTK4PLdL7bova329WhY&sensor = false&mode = driving"
     }
+    /*
+    override fun onPause()
+    {
+        super.onPause()
+
+        //save map camera state
+        val cam = mMap.cameraPosition
+        val lon = cam.target.longitude
+        val lat = cam.target.latitude
+        val zoom = cam.zoom
+        with (sharedPreferences.edit()){
+            putFloat("LON",lon.toFloat())
+            putFloat("LAT",lat.toFloat())
+            putFloat("ZOOM",zoom)
+            apply()
+        }
+    }
+
+        */
 
     /*override fun onResume() {
         super.onResume()
@@ -419,8 +459,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // set up the ok button
         builder.setPositiveButton(android.R.string.ok) { dialog, p1 ->
             val d = runDistance.text
-            if(d.isNotEmpty()) {
-                distance = runDistance.text.toString().toDouble()
+            distance = runDistance.text.toString().toDouble()
+            if(d.isNotEmpty()&&distance>=100&&distance<=100000) {
                 return_origin = returnToOrigin.isChecked
                 locate()
                 mMap.clear()
@@ -445,12 +485,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     //Flag = true
                 }
             }
+            else
+                Toast.makeText(context,"Please enter a distance between 100m and 100km",Toast.LENGTH_SHORT).show()
+            builder.setNegativeButton(android.R.string.cancel) { dialog, p1 ->
+                dialog.cancel()
+            }
         }
-
-        builder.setNegativeButton(android.R.string.cancel) { dialog, p1 ->
-            dialog.cancel()
-        }
-        builder.show();
+        builder.show()
     }
     private fun OnthePath(UserLocation:LatLng,Checkpoint:LatLng,StepLength:Float):Boolean{
         var location1:Location  = android.location.Location("")
@@ -468,7 +509,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         return true
     }
 
-    private fun Arrive(UserLocation:LatLng,Checkpoint:LatLng):Boolean{
+    private fun Arrive(UserLocation:LatLng,Checkpoint:LatLng):Float{
         var location1:Location=android.location.Location("")
         var location2:Location=android.location.Location("")
 
@@ -478,17 +519,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         location2.longitude = Checkpoint.longitude
 
         var dis:Float = location1.distanceTo(location2)
-        if(dis>200.toDouble()){
-            return false
-        }
-        return true
+
+        return dis
     }
 
     inner class running:AsyncTask<Void,Void,Boolean>(){
         override fun doInBackground(vararg params: Void?): Boolean {
             return Flag
         }
-
         override fun onPostExecute(result: Boolean?) {
             if(result == true){
                 fusedLocationClient.lastLocation
@@ -510,15 +548,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     }
                     //test if user is near the path
                     var onthepath = OnthePath(currLoc, StepList[ListIndex], StepLengthList[ListIndex])
+                    //test if user reach the check point
+                    var arrive = Arrive(currLoc, StepList[ListIndex])
                     if (onthepath == false) {
                         vibrator =
                             context!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                        vibrator.vibrate(500)
-                        Toast.makeText(Con, "Please follow the path. Your are leaving the next check point too far, Check the map!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(Con, ""+arrive.toInt()+"m from next check point", Toast.LENGTH_LONG).show()
                     }
-                    //test if user reach the check point
-                    var arrive = Arrive(currLoc, StepList[ListIndex])
-                    if (arrive == true) {
+
+                    if (arrive <=30) {
+                        vibrator.vibrate(500)
+                        Toast.makeText(Con, "You have reached check point, great job!", Toast.LENGTH_SHORT).show()
                         mMap.addMarker(
                             MarkerOptions().position(StepList.get(ListIndex)).icon(
                                 BitmapDescriptorFactory.fromResource(
@@ -528,7 +568,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         )
                         //MarkerList.put(ListIndex, marker)
                         ListIndex++
-                        Toast.makeText(Con, "Checkpoint arrive", Toast.LENGTH_SHORT).show()
                     }
                 if(ListIndex>=StepList.size){
                     Flag = false
