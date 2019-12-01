@@ -1,18 +1,23 @@
 package com.example.a4176_project.ui.notifications
 
-import android.content.ClipDescription
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
-import android.service.media.MediaBrowserService
-import android.util.Log
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.a4176_project.R
-import kotlinx.android.synthetic.main.login.*
 import java.io.File
 
 class NotificationsFragment : Fragment() {
@@ -21,7 +26,8 @@ class NotificationsFragment : Fragment() {
     val descriptionStorage = "descriptionFile"
     var name: String = ""
     var description: String = ""
-
+    val REQUEST_IMAGE_CAPTURE = 1
+    lateinit var imageView: ImageView
     lateinit var username: TextView
     lateinit var descriptionView: TextView
 
@@ -32,9 +38,11 @@ class NotificationsFragment : Fragment() {
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_notifications, container, false)
-        val imageView: ImageView = root.findViewById(R.id.avator)
         val file = File(context?.filesDir, nameStorage)
-
+         imageView = root.findViewById(R.id.avator)
+        imageView.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
         username= root.findViewById(R.id.profileNameView)
         descriptionView = root.findViewById(R.id.descriptionTextView)
 
@@ -90,6 +98,26 @@ class NotificationsFragment : Fragment() {
         }
         builder.show();
 
+    }
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(activity!!.packageManager)?.also {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            val imageBitmap = data!!.extras!!.get("data") as Bitmap
+            //var img = Bitmap.createScaledBitmap(imageBitmap,150,150,false)
+            Glide
+                .with(this)
+                .load(imageBitmap)
+                .centerCrop()
+                .apply(RequestOptions.circleCropTransform())//found this usage here https://stackoverflow.com/questions/25278821/how-to-round-an-image-with-glide-library
+                .into(imageView)
+        }
     }
 
 }
