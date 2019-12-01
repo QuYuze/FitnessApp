@@ -135,34 +135,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         return "https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${dest.latitude},${dest.longitude}&key=AIzaSyDU-IenVPIoA8bxKTK4PLdL7bova329WhY&sensor = false&mode = driving"
     }
 
-    /*override fun onResume() {
-        super.onResume()
-        while(ListIndex<StepList.size) {
-            //test if user is near the path
-            var onthepath = OnthePath(currLoc, StepList[ListIndex], StepLengthList[ListIndex])
-            if (onthepath == false) {
-                vibrator =
-                    context!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                vibrator.vibrate(500)
-
-            }
-            //test if user reach the check point
-            var arrive = Arrive(currLoc, StepList[ListIndex])
-            if (arrive == true) {
-                ListIndex++
-                var marker = MarkerList.get(ListIndex)!!
-                marker.remove()
-                marker = mMap.addMarker(
-                    MarkerOptions().position(StepList.get(ListIndex)).icon(
-                        BitmapDescriptorFactory.fromResource(
-                            R.drawable.checkpointgreen
-                        )
-                    )
-                )
-                MarkerList.put(ListIndex, marker)
-            }
-        }
-    }*/
     override fun onMapReady(googleMap: GoogleMap) {
         MapsInitializer.initialize(context)
         mMap = googleMap

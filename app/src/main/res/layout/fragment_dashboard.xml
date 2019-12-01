@@ -17,4 +17,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/CokeShaker"
+        android:layout_width="273dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="152dp"
+        android:background="@drawable/roundbutton"
+        android:text="Coke Shaker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_dashboard" />
 </androidx.constraintlayout.widget.ConstraintLayout>
