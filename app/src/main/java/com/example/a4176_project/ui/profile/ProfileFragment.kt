@@ -1,4 +1,4 @@
-package com.example.a4176_project.ui.notifications
+package com.example.a4176_project.ui.profile
 
 import android.app.Activity
 import android.content.Context
@@ -20,7 +20,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.a4176_project.R
 import java.io.File
 
-class NotificationsFragment : Fragment() {
+class ProfileFragment : Fragment() {
 
     val nameStorage = "nameFile"
     val descriptionStorage = "descriptionFile"
@@ -37,7 +37,7 @@ class NotificationsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val root = inflater.inflate(R.layout.fragment_notifications, container, false)
+        val root = inflater.inflate(R.layout.fragment_profile, container, false)
         val file = File(context?.filesDir, nameStorage)
          imageView = root.findViewById(R.id.avator)
         imageView.setOnClickListener {
