@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">4176_Project</string>
+    <string name="app_name">Roarz</string>
     <string name="Login_welcome">Welcome !</string>
     <string name="Login">Log in</string>
     <string name="Signup">Sign up</string>
@@ -12,7 +12,7 @@
     <string name="dateOfBirth">Date of birth:</string>
     <string name="checkbox_TEXT">I have read and agree to </string>
     <string name="checkbox_link">Terms and Conditions</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_main2">Roarz</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Profile</string>
