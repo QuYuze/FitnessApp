@@ -317,15 +317,15 @@ The following figure represents our High-level organization.
 
 ## Layout
 
-<img src="\Figures\layout1.PNG" alt="layout1" style="zoom: 50%;" />
+<img src="/Figures/layout1.PNG" alt="layout1" style="zoom: 50%;" />
 
-<img src="\Figures\layout2.PNG" alt="layout2" style="zoom: 50%;" />
+<img src="/Figures/layout2.PNG" alt="layout2" style="zoom: 50%;" />
 
-<img src="\Figures\layout3.PNG" alt="layout3" style="zoom:50%;" />
+<img src="/Figures/layout3.PNG" alt="layout3" style="zoom:50%;" />
 
-<img src="\Figures\signIn.PNG" alt="signIn" style="zoom:50%;" />
+<img src="/Figures/signIn.PNG" alt="signIn" style="zoom:50%;" />
 
-<img src="\Figures\signUp.PNG" alt="signUp" style="zoom:50%;" />
+<img src="/Figures/signUp.PNG" alt="signUp" style="zoom:50%;" />
 
 ## Implementation
 
@@ -343,11 +343,11 @@ Every time the user reaches a checkpoint, the "red cross" marker will replaced b
 
 A Toast message will show up regularly to the indicate the distance from the current position to the next check point.
 
-<img src="\Figures\homFrag.jpg" alt="homFrag" style="zoom: 25%;" />
+<img src="/Figures/homFrag.jpg" alt="homFrag" style="zoom: 25%;" />
 
 The following figure shows the dialogue invoked by the fragment.
 
-<img src="\Figures\homeDia.jpg" alt="homeDia" style="zoom: 25%;" />
+<img src="/Figures/homeDia.jpg" alt="homeDia" style="zoom: 25%;" />
 
 **Notification Fragment:**
 
@@ -359,25 +359,25 @@ The users can also edit and update their profile by pressing the "pen" icon loca
 
 
 
-<img src="\Figures\navigationFrag.jpg" alt="navigationFrag" style="zoom:25%;" />
+<img src="/Figures/navigationFrag.jpg" alt="navigationFrag" style="zoom:25%;" />
 
 The following figure shows the dialogue invoked the user.
 
-<img src="\Figures\notifyDia.jpg" alt="notifyDia" style="zoom: 25%;" />
+<img src="/Figures/notifyDia.jpg" alt="notifyDia" style="zoom: 25%;" />
 
 **Dashboard Fragment:**
 
 This fragment contains two functionalities: the QR code generation as well as the "Warming Up" activity. The interface provide access to them through the two buttons located at the center of the interface. 
 
-<img src="\Figures\dashfrag.jpg" alt="dashfrag" style="zoom:25%;" />
+<img src="/Figures\dashfrag.jpg" alt="dashfrag" style="zoom:25%;" />
 
 The following figures shows the dialogue invoked the user.
 
-<img src="\Figures\cokeShake.PNG" alt="cokeShake" style="zoom: 80%;" />
+<img src="/Figures\cokeShake.PNG" alt="cokeShake" style="zoom: 80%;" />
 
 
 
-<img src="\Figures\qrcode.jpg" alt="qrcode" style="zoom:25%;" />
+<img src="/Figures\qrcode.jpg" alt="qrcode" style="zoom:25%;" />
 
 ## Future Work
 
