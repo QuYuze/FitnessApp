@@ -1,5 +1,5 @@
 package com.example.a4176_project.ui.dashboard
-
+//These content comes from our lab4
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -71,7 +71,7 @@ class ShakeDetector(val context: Context) {
                 lastX = x
                 lastY = y
                 lastZ = z
-                Toast.makeText(context, "No Motion detected", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "No Motion detected", Toast.LENGTH_SHORT).show()
 
             } else {
                 timeDiff = now - lastUpdate

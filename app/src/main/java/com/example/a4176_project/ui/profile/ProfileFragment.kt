@@ -135,6 +135,7 @@ class ProfileFragment : Fragment() {
         }
         builder.show()
     }
+
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(activity!!.packageManager)?.also {

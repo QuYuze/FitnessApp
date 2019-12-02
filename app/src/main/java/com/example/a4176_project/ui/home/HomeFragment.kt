@@ -132,16 +132,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
-        /*
-        val lat = sharedPreferences.getFloat("LAT",0f)
-        val lon = sharedPreferences.getFloat("LON",-63.5863118f)
-        val zoom = sharedPreferences.getFloat("ZOOM",14.0f)
-        if(lat!=0f)
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat.toDouble(),lon.toDouble()), zoom))
-        else
-            locate()
-
-         */
         val timerTask = object: TimerTask(){
             override fun run() {
                 if(Flag==true && ListIndex<StepList.size) {
@@ -155,25 +145,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     fun getDirectionURL(origin: LatLng, dest: LatLng): String {
         return "https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${dest.latitude},${dest.longitude}&key=AIzaSyDU-IenVPIoA8bxKTK4PLdL7bova329WhY&sensor = false&mode = driving"
     }
-    /*
-    override fun onPause()
-    {
-        super.onPause()
-
-        //save map camera state
-        val cam = mMap.cameraPosition
-        val lon = cam.target.longitude
-        val lat = cam.target.latitude
-        val zoom = cam.zoom
-        with (sharedPreferences.edit()){
-            putFloat("LON",lon.toFloat())
-            putFloat("LAT",lat.toFloat())
-            putFloat("ZOOM",zoom)
-            apply()
-        }
-    }
-
-        */
 
     override fun onMapReady(googleMap: GoogleMap) {
         MapsInitializer.initialize(context)
@@ -426,7 +397,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         //val spinner = view.findViewById(R.id.spinner2) as Spinner
         val runDistance = view.findViewById(R.id.runDistance) as EditText
 
-        builder.setView(view);
+        builder.setView(view)
 
         // set up the ok button
         builder.setPositiveButton(android.R.string.ok) { dialog, p1 ->

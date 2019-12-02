@@ -28,4 +28,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_dashboard" />
+
+    <Button
+        android:id="@+id/QRcode"
+        android:layout_width="273dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/roundbutton"
+        android:text="Account QRcode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CokeShaker" />
 </androidx.constraintlayout.widget.ConstraintLayout>
