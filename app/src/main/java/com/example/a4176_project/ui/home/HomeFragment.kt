@@ -402,37 +402,48 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // set up the ok button
         builder.setPositiveButton(android.R.string.ok) { dialog, p1 ->
             val d = runDistance.text
-            distance = runDistance.text.toString().toDouble()
-            if(d.isNotEmpty()&&distance>=100&&distance<=100000) {
-                return_origin = returnToOrigin.isChecked
-                locate()
-                mMap.clear()
-                if(return_origin)
-                {
-                    distance/=2
-                    val point1 = currLoc
-                    val point2 = randomGeo(point1,distance)
-                    var URL = getDirectionURL(point1, point2)
-                    GetDirection(URL, distance).execute()
-                    URL = getDirectionURL(point2, point1)
-                    GetDirection(URL, distance).execute()
-                    //Flag = true
-                }
-                else
-                {
-                    val point1 = currLoc
-                    val point2 = randomGeo(point1,distance)
-                    val URL = getDirectionURL(point1, point2)
-                    //val URL = getDirectionURL(LatLng(44.6403983,-63.5867983),LatLng(44.646777,-63.583474))
-                    GetDirection(URL, distance).execute()
-                    //Flag = true
+            if (d.isNotEmpty()) {
+                distance = runDistance.text.toString().toDouble()
+                if (distance >= 100 && distance <= 100000) {
+                    return_origin = returnToOrigin.isChecked
+                    locate()
+                    mMap.clear()
+                    if (return_origin) {
+                        distance /= 2
+                        val point1 = currLoc
+                        val point2 = randomGeo(point1, distance)
+                        var URL = getDirectionURL(point1, point2)
+                        GetDirection(URL, distance).execute()
+                        URL = getDirectionURL(point2, point1)
+                        GetDirection(URL, distance).execute()
+                        //Flag = true
+                    } else {
+                        val point1 = currLoc
+                        val point2 = randomGeo(point1, distance)
+                        //val URL = getDirectionURL(point1, point2)
+                        val URL = getDirectionURL(
+                            LatLng(44.6403983, -63.5867983),
+                            LatLng(44.646777, -63.583474)
+                        )
+                        GetDirection(URL, distance).execute()
+                        //Flag = true
+                    }
+                } else
+                    Toast.makeText(
+                        context,
+                        "Please enter a distance between 100m and 100km",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                builder.setNegativeButton(android.R.string.cancel) { dialog, p1 ->
+                    dialog.cancel()
                 }
             }
             else
-                Toast.makeText(context,"Please enter a distance between 100m and 100km",Toast.LENGTH_SHORT).show()
-            builder.setNegativeButton(android.R.string.cancel) { dialog, p1 ->
-                dialog.cancel()
-            }
+                Toast.makeText(
+                    context,
+                    "Please enter a distance !",
+                    Toast.LENGTH_SHORT
+                ).show()
         }
         builder.show()
     }
@@ -499,7 +510,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         Toast.makeText(Con, ""+arrive.toInt()+"m from next check point", Toast.LENGTH_LONG).show()
                     }
 
-                    if (arrive <=30) {
+                    if (arrive <=50) {
                         vibrator.vibrate(500)
                         Toast.makeText(Con, "You have reached check point, great job!", Toast.LENGTH_SHORT).show()
                         mMap.addMarker(
