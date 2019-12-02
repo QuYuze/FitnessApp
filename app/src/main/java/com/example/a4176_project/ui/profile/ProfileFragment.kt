@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.a4176_project.Login_Activity
 import com.example.a4176_project.R
 import com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE
 import java.io.File
@@ -85,6 +86,13 @@ class ProfileFragment : Fragment() {
         {
             username.text = uname
             descriptionView.text = udesc
+        }
+        val text_login:TextView = root.findViewById(R.id.login)
+        val intent = Intent(context!!, Login_Activity::class.java).apply{
+
+        }
+        text_login.setOnClickListener {
+            startActivity(intent)
         }
         return root
     }
