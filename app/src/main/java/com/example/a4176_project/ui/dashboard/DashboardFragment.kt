@@ -103,15 +103,33 @@ class DashboardFragment : Fragment() {
         builder.setTitle("QRcode")
         val view = layoutInflater.inflate(R.layout.qrcode_dialog, null)
         val picture = view.findViewById(R.id.QRcode) as ImageView
-        picture.setImageResource(R.drawable.coke1)
-        builder.setView(view);
+        val qrcode = TextToImageEncode("YahuWang")
+
+        builder.setView(view)
             Glide
                 .with(this)
-                .load(TextToImageEncode("YahuWang"))
+                .load(qrcode)
                 .centerCrop()
                 .into(picture)
 
-        builder.setPositiveButton("Okay") { dialog, p1 ->
+        builder.setNeutralButton("Share"){ dialog, p1 ->
+            /*
+            val uri = qrcode.saveToInternalStorage(this)
+
+            val path = File(file, "image.png")
+            val contentUri = FileProvider.getUriForFile(context!!,"ALL", path)
+            val shareIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM,contentUri)
+                type = "image/jpeg"
+                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            }
+            startActivity(Intent.createChooser(shareIntent, "Share to..."))
+            *
+             */
+        }
+
+        builder.setPositiveButton(android.R.string.ok) { dialog, p1 ->
             dialog.cancel()
         }
         builder.show()
