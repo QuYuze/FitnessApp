@@ -1,6 +1,7 @@
 package com.example.a4176_project.ui.dashboard
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Vibrator
@@ -12,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -20,6 +22,8 @@ import com.example.a4176_project.R
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
+import java.io.File
+import java.io.FileOutputStream
 
 class DashboardFragment : Fragment() {
 
@@ -113,20 +117,18 @@ class DashboardFragment : Fragment() {
                 .into(picture)
 
         builder.setNeutralButton("Share"){ dialog, p1 ->
-            /*
-            val uri = qrcode.saveToInternalStorage(this)
+            val file = File("${context!!.cacheDir}/drawing.png")
+            qrcode!!.compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(file))
+            val contentUri = FileProvider.getUriForFile(context!!, context!!.packageName + ".provider", file)
 
-            val path = File(file, "image.png")
-            val contentUri = FileProvider.getUriForFile(context!!,"ALL", path)
             val shareIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_STREAM,contentUri)
-                type = "image/jpeg"
+                type = "image/*"
                 flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             }
             startActivity(Intent.createChooser(shareIntent, "Share to..."))
-            *
-             */
+
         }
 
         builder.setPositiveButton(android.R.string.ok) { dialog, p1 ->
