@@ -195,7 +195,7 @@ The third major module is the user interface, which is responsible for interconn
 
 The following figure provides a brief view of our current functional decompositions. 
 
-![functional](\Figures\functional.PNG)
+![functional](/Figures/functional.PNG)
 
 ## High-level Organization
 
