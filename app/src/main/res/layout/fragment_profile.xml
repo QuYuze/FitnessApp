@@ -34,11 +34,13 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="64dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/edit_button_icon"
+        app:layout_constraintBottom_toTopOf="@+id/login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
-        android:background="@drawable/edit_button_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
 
     <TextView
         android:id="@+id/descriptionTextView"
@@ -55,14 +57,27 @@
         android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
         android:text="@string/title_notifications"
         android:textColor="@color/inputText"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/avator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/Login"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editProfileButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
