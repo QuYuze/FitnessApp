@@ -209,7 +209,7 @@ Notification Fragment contains the necessary components for updating user's prof
 
 The following figure represents our High-level organization. 
 
-![High level org](\Figures\High level org.PNG)
+![High level org](/Figures/High level org.PNG)
 
 ## Clickstreams 
 
