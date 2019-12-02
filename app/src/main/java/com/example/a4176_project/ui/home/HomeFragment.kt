@@ -420,11 +420,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     } else {
                         val point1 = currLoc
                         val point2 = randomGeo(point1, distance)
-                        //val URL = getDirectionURL(point1, point2)
-                        val URL = getDirectionURL(
-                            LatLng(44.6403983, -63.5867983),
-                            LatLng(44.646777, -63.583474)
-                        )
+                        val URL = getDirectionURL(point1, point2)
+                        //val URL = getDirectionURL((LatLng(44.6403983, -63.5867983), LatLng(44.646777, -63.583474) )
                         GetDirection(URL, distance).execute()
                         //Flag = true
                     }
